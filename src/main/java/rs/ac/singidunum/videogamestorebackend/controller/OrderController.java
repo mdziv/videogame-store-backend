@@ -22,8 +22,27 @@ class OrderController {
     @CrossOrigin(origins = "http://localhost:5180")
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void saveOrder(@RequestBody Order order) {
+    public void createOrder(@RequestBody Order order) {
         orderRepository.save(order);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5180")
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateOrder(@RequestBody Order order, @PathVariable Integer id) {
+        Order existing = orderRepository.findById(id).orElseThrow();
+        existing.setGame(order.getGame());
+        existing.setAmount(order.getAmount());
+        existing.setPurchasedAt(order.getPurchasedAt());
+        orderRepository.save(existing);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5180")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOrder(@PathVariable Integer id) {
+        Order existing = orderRepository.findById(id).orElseThrow();
+        orderRepository.delete(existing);
     }
 
 }
